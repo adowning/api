@@ -1013,3 +1013,25 @@ export const s3Stream = async (key: string, errorCallback: (error: any) => void)
 
   return stream;
 };
+
+export const convertSMCustomersList = (data: any) => {
+  const list: any[] = [];
+    data.forEach(element => {
+        var customer = {
+          firstName: element['firstName']  ,
+          lastName: element['lastName'] || element['accountName'],
+          // integrationId: "XxLeRKYQoCh2ip4Px",
+          primaryPhone: element['phone1'],
+          // phones: `${element['phone1']},${element['phone2']}`,
+          // email: element['email'],
+          // emails: [element['email']],
+          // isUser: false,
+          // primaryName:  element['accountName'],
+          tag: 'sm import'
+
+          // profilePic: fbUserProfilePic,
+        }
+        list.push(customer )
+    });
+return list
+}

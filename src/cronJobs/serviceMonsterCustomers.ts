@@ -1,11 +1,11 @@
 import * as dotenv from 'dotenv';
 import * as schedule from 'node-schedule';
 import { RABBITMQ_QUEUES } from '../data/constants';
-import { mergeServiceMonsterCustomers } from '../data/modules/serviceMonster/getServiceMonsterCustomers';
-import { getConfig, sendRequest } from '../data/utils';
+import { dateToString } from '../data/modules/insights/exportUtils';
+import { convertSMCustomersList, getConfig, getToday, sendRequest } from '../data/utils';
 
 import { connect } from '../db/connection';
-import { Customers } from '../db/models';
+import { Customers, Users } from '../db/models';
 import { debugCrons } from '../debuggers';
 import messageBroker from '../messageBroker';
 
@@ -19,11 +19,19 @@ export const createCustomersFromServiceMonster = async () => {
   const customers = await Customers.find();
   const sortedList = customers.sort((a, b) => (a.modifiedAt.getSeconds as any) - (b.modifiedAt.getSeconds as any));
   const last = sortedList[sortedList.length - 1];
-  debugger;
-  console.log(last.modifiedAt.toISOString());
-  var timeStampString = last.modifiedAt.toISOString();
+  let timeStampString;
+  if(customers.length < 15){
+    const today = new Date()
+    const currentYear = new Date().getFullYear();
+    const year = (currentYear - 3) ;
+     today.setFullYear(year, 1);
+    timeStampString = today.toISOString()
+  }else{
+   timeStampString = last.modifiedAt.toISOString();
+    
+  }
   const url = `https://api.servicemonster.net/v1/accounts?wField=timeStamp&wValue=${timeStampString}&wOperator=gt`;
-  console.log(url);
+  // console.log(url);
   // debugger;
   const rawSMData = await sendRequest({
     url,
@@ -35,11 +43,9 @@ export const createCustomersFromServiceMonster = async () => {
   });
   console.log(rawSMData);
   let data;
-  let error;
 
   if (typeof rawSMData === 'string') {
     data = JSON.parse(rawSMData).items;
-    error = JSON.parse(rawSMData).error;
     if (data.length < 1) {
       return 'no new customers';
     }
@@ -48,11 +54,14 @@ export const createCustomersFromServiceMonster = async () => {
     if (data.length < 1) {
       return 'no new customers';
     }
-    error = rawSMData.error;
   }
   let fileType = 'raw';
   let fileName = null;
-  const UPLOAD_SERVICE_TYPE = await getConfig('UPLOAD_SERVICE_TYPE', 'AWS');
+  const scopeBrandIds = '[]';
+
+  const UPLOAD_SERVICE_TYPE = await getConfig('UPLOAD_SERVICE_TYPE', 'GCS');
+  var apiCustomers = convertSMCustomersList(data);
+  const user = await Users.getUser('qLsLeYeW2nnWjiMMy')
 
   try {
     const result = await messageBroker().sendRPCMessage(RABBITMQ_QUEUES.RPC_API_TO_WORKERS, {
@@ -61,13 +70,13 @@ export const createCustomersFromServiceMonster = async () => {
       fileType,
       fileName,
       uploadType: UPLOAD_SERVICE_TYPE,
-      data: data,
-      // scopeBrandIds,
-      // user: req.user,
+      data: apiCustomers,
+      scopeBrandIds,
+      user:user,
     });
     console.log(result);
   } catch (e) {
-    return console.log(`Integration not found: ${e}`);
+    return console.log(` ${e}`);
   }
   // const result =
   // await  mergeServiceMonsterCustomers(last.modifiedAt);
@@ -96,6 +105,6 @@ export const createCustomersFromServiceMonster = async () => {
  * └───────────────────────── second (0 - 59, OPTIONAL)
  */
 schedule.scheduleJob('1 * * * * *', async () => {
-  debugCrons('Checked createCustomersFromServiceMonster');
+  debugCrons('Ran createCustomersFromServiceMonster');
   createCustomersFromServiceMonster();
 });

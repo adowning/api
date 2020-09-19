@@ -140,7 +140,9 @@ const integrationMutations = {
     if (kind.includes('nylas')) {
       kind = 'nylas';
     }
-
+    if (kind.includes('service-monster')) {
+      kind = 'service-monster';
+    }
     if (kind.includes('facebook')) {
       kind = 'facebook';
     }

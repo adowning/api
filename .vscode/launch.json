@@ -6,18 +6,29 @@
     "configurations": [
         {
             "command": "npm run dev",
-            "name": "Run npm dev",
+            "name": "Api",
             "request": "launch",
             "type": "node-terminal"
         },
         {
-            "type": "node",
+            "command": "npm run dev-crons",
+            "name": "Crons",
             "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/dist"
+            "type": "node-terminal"
+        },
+        {
+            "command": "npm run dev-workers",
+            "name": "Workers",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+      
+    ],
+    "compounds": [
+        {
+          "name": "Api/Crons/Workers",
+          "configurations": ["Api", "Crons", "Workers"],
+        //   "preLaunchTask": "${defaultBuildTask}"
         }
-    ]
+      ]
 }

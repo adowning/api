@@ -62,6 +62,7 @@ export const LEAD_SUCCESS_ACTIONS = {
 
 export const KIND_CHOICES = {
   MESSENGER: 'messenger',
+  SERVICEMONSTER: 'service-monster',
   LEAD: 'lead',
   FACEBOOK_MESSENGER: 'facebook-messenger',
   FACEBOOK_POST: 'facebook-post',
@@ -83,6 +84,7 @@ export const KIND_CHOICES = {
   TELNYX: 'telnyx',
   ALL: [
     'messenger',
+    'service-monster',
     'lead',
     'facebook-messenger',
     'facebook-post',
@@ -107,6 +109,7 @@ export const KIND_CHOICES = {
 
 export const INTEGRATION_NAMES_MAP = {
   messenger: 'Web messenger',
+  serviceMonster: 'Service Monster',
   lead: 'Lead',
   'facebook-messenger': 'Facebook messenger',
   'facebook-post': 'Facebook post',
