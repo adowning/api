@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"erxes.pipeline_templates"}],"uuid":"6e1324fba3874aac8f3d7fe2dbcf9914","collectionName":"pipeline_templates"}

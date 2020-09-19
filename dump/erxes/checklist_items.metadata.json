@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"erxes.checklist_items"}],"uuid":"d7f6f67537b24fd191444c1ca7c49601","collectionName":"checklist_items"}

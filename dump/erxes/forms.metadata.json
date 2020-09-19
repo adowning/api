@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"erxes.forms"}],"uuid":"3f6f5c26f9ee4c2da98aecd61873b04e","collectionName":"forms"}

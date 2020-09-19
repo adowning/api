@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"erxes.migrations"}],"uuid":"33c7de54828a4920be357aede0896767","collectionName":"migrations"}
